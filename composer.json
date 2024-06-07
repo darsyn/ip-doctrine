@@ -1,0 +1,46 @@
+{
+    "name": "darsyn/ip-doctrine",
+    "description": "Doctrine types for darsyn/ip",
+    "license": "MIT",
+    "keywords": ["doctrine", "ip"],
+    "type": "library",
+    "homepage": "https://github.com/darsyn/ip-doctrine",
+    "authors": [
+        {
+            "name": "Zan Baldwin",
+            "email": "hello@zanbaldwin.com",
+            "homepage": "https://zanbaldwin.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Darsyn\\IP\\Doctrine\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.6",
+        "ext-pdo": "*",
+        "darsyn/ip": "^5.0",
+        "doctrine/dbal": "^2.3 || ^3"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Darsyn\\IP\\Tests\\Doctrine\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan-deprecation-rules": "^1.2",
+        "phpunit/phpunit": "*"
+    },
+    "conflict": {
+        "doctrine/dbal": ">=4"
+    },
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    },
+    "suggest": {
+        "doctrine/dbal": "to use IP as a column type"
+    }
+}
