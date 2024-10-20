@@ -5,8 +5,10 @@ namespace Darsyn\IP\Doctrine;
 use Darsyn\IP\Exception\IpException;
 use Darsyn\IP\IpInterface;
 use Darsyn\IP\Util\MbString;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
+use Doctrine\DBAL\Types\Exception\ValueNotConvertible;
 use Doctrine\DBAL\Types\Type;
 
 /**
@@ -38,7 +40,7 @@ abstract class AbstractType extends Type
      * {@inheritdoc}
      * @return string
      */
-    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         return $platform->getBinaryTypeDeclarationSQL(['length' => static::IP_LENGTH]);
     }
@@ -48,7 +50,7 @@ abstract class AbstractType extends Type
      * @throws \Doctrine\DBAL\Types\ConversionException
      * @return \Darsyn\IP\IpInterface|null
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): mixed
     {
         /** @var string|resource|\Darsyn\IP\IpInterface|null $value */
         // PostgreSQL will return the binary data as a resource instead of a string (like MySQL).
@@ -71,7 +73,7 @@ abstract class AbstractType extends Type
         try {
             return $this->createIpObject($value);
         } catch (IpException $e) {
-            throw ConversionException::conversionFailed($value, static::NAME);
+            throw ValueNotConvertible::new($value, static::NAME, null, $e);
         }
     }
 
@@ -80,7 +82,7 @@ abstract class AbstractType extends Type
      * @throws \Doctrine\DBAL\Types\ConversionException
      * @return string|null
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
         if (empty($value)) {
             return null;
@@ -133,11 +135,11 @@ abstract class AbstractType extends Type
 
     /**
      * {@inheritdoc}
-     * @return int
+     * @return ParameterType
      */
-    public function getBindingType()
+    public function getBindingType(): ParameterType
     {
-        return \PDO::PARAM_LOB;
+        return ParameterType::LARGE_OBJECT;
     }
 
     /**

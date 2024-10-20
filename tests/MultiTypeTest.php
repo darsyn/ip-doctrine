@@ -4,8 +4,8 @@ namespace Darsyn\IP\Tests\Doctrine;
 
 use Darsyn\IP\Doctrine\MultiType;
 use Darsyn\IP\Version\Multi as IP;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Types\Type;
-use PDO;
 use PHPUnit\Framework\Attributes as PHPUnit;
 use PHPUnit\Framework\TestCase;
 
@@ -165,19 +165,8 @@ class MultiTypeTest extends TestCase
      * @return void
      */
     #[PHPUnit\Test]
-    public function testBindingTypeIsAValidPDOTypeConstant()
+    public function testBindingTypeIsALargeObject()
     {
-        // Get all constants of the PDO class.
-        $constants = (new \ReflectionClass(PDO::class))->getConstants();
-        // Now filter out any constants that don't begin with "PARAM_".
-        $paramConstants = array_intersect_key(
-            $constants,
-            array_flip(array_filter(array_keys($constants), function ($key) {
-                return strpos($key, 'PARAM_') === 0;
-            }))
-        );
-        // Check that the return value of the Type's binding value is a valid
-        // PDO PARAM constant.
-        $this->assertContains($this->type->getBindingType(), $paramConstants);
+        $this->assertEquals(ParameterType::LARGE_OBJECT, $this->type->getBindingType());
     }
 }
