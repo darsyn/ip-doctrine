@@ -5,38 +5,28 @@ namespace Darsyn\IP\Tests\Doctrine;
 use Darsyn\IP\Doctrine\IPv4Type;
 use Darsyn\IP\Version\IPv4 as IP;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\Attributes as PHPUnit;
 use PHPUnit\Framework\TestCase;
 
 class IPv4TypeTest extends TestCase
 {
-    /** @var \Doctrine\DBAL\Platforms\AbstractPlatform $platform */
-    private $platform;
+    private AbstractPlatform $platform;
+    private IPv4Type $type;
 
-    /** @var \Darsyn\IP\Doctrine\IPv4Type $type */
-    private $type;
-
-    /**
-     * @beforeClass
-     * @return void
-     */
     #[PHPUnit\BeforeClass]
-    public static function setUpBeforeClassWithoutReturnDeclaration()
+    public static function setUpBeforeClassWithoutReturnDeclaration(): void
     {
         if (class_exists(Type::class)) {
             Type::addType('ipv4', IPv4Type::class);
         }
     }
 
-    /**
-     * @before
-     * @return void
-     */
     #[PHPUnit\Before]
-    protected function setUpWithoutReturnDeclaration()
+    protected function setUpWithoutReturnDeclaration(): void
     {
-        if (!class_exists('Doctrine\DBAL\Types\Type')) {
+        if (!class_exists(Type::class)) {
             $this->markTestSkipped('Skipping test that requires "doctrine/dbal".');
         }
 
@@ -46,12 +36,8 @@ class IPv4TypeTest extends TestCase
         $this->type = $type;
     }
 
-    /**
-     * @test
-     * @return void
-     */
     #[PHPUnit\Test]
-    public function testIpConvertsToDatabaseValue()
+    public function testIpConvertsToDatabaseValue(): void
     {
         $ip = IP::factory('12.34.56.78');
 
@@ -61,33 +47,21 @@ class IPv4TypeTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @test
-     * @return void
-     */
     #[PHPUnit\Test]
-    public function testInvalidIpConversionForDatabaseValue()
+    public function testInvalidIpConversionForDatabaseValue(): void
     {
         $this->expectException(\Doctrine\DBAL\Types\ConversionException::class);
         $this->type->convertToDatabaseValue('abcdefg', $this->platform);
     }
 
-    /**
-     * @test
-     * @return void
-     */
     #[PHPUnit\Test]
-    public function testNullConversionForDatabaseValue()
+    public function testNullConversionForDatabaseValue(): void
     {
         $this->assertNull($this->type->convertToDatabaseValue(null, $this->platform));
     }
 
-    /**
-     * @test
-     * @return void
-     */
     #[PHPUnit\Test]
-    public function testIpConvertsToPHPValue()
+    public function testIpConvertsToPHPValue(): void
     {
         $ip = IP::factory('12.34.56.78');
         /** @var IP $dbIp */
@@ -96,12 +70,8 @@ class IPv4TypeTest extends TestCase
         $this->assertEquals('12.34.56.78', $dbIp->getDotAddress());
     }
 
-    /**
-     * @test
-     * @return void
-     */
     #[PHPUnit\Test]
-    public function testIpObjectConvertsToPHPValue()
+    public function testIpObjectConvertsToPHPValue(): void
     {
         $ip = IP::factory('12.34.56.78');
         /** @var IP $dbIp */
@@ -110,12 +80,8 @@ class IPv4TypeTest extends TestCase
         $this->assertSame($ip, $dbIp);
     }
 
-    /**
-     * @test
-     * @return void
-     */
     #[PHPUnit\Test]
-    public function testStreamConvertsToPHPValue()
+    public function testStreamConvertsToPHPValue(): void
     {
         $ip = IP::factory('12.34.56.78');
         $stream = fopen('php://memory','r+');
@@ -129,43 +95,27 @@ class IPv4TypeTest extends TestCase
         $this->assertEquals('12.34.56.78', $dbIp->getDotAddress());
     }
 
-    /**
-     * @test
-     * @return void
-     */
     #[PHPUnit\Test]
-    public function testInvalidIpConversionForPHPValue()
+    public function testInvalidIpConversionForPHPValue(): void
     {
         $this->expectException(\Doctrine\DBAL\Types\ConversionException::class);
         $this->type->convertToPHPValue('abcdefg', $this->platform);
     }
 
-    /**
-     * @test
-     * @return void
-     */
     #[PHPUnit\Test]
-    public function testNullConversionForPHPValue()
+    public function testNullConversionForPHPValue(): void
     {
         $this->assertNull($this->type->convertToPHPValue(null, $this->platform));
     }
 
-    /**
-     * @test
-     * @return void
-     */
     #[PHPUnit\Test]
-    public function testGetBinaryTypeDeclarationSQL()
+    public function testGetBinaryTypeDeclarationSQL(): void
     {
         $this->assertEquals('DUMMYBINARY()', $this->type->getSQLDeclaration(['length' => 4], $this->platform));
     }
 
-    /**
-     * @test
-     * @return void
-     */
     #[PHPUnit\Test]
-    public function testBindingTypeIsALargeObject()
+    public function testBindingTypeIsALargeObject(): void
     {
         $this->assertEquals(ParameterType::LARGE_OBJECT, $this->type->getBindingType());
     }

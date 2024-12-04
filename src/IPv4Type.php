@@ -2,6 +2,7 @@
 
 namespace Darsyn\IP\Doctrine;
 
+use Darsyn\IP\IpInterface;
 use Darsyn\IP\Version\IPv4 as IP;
 
 /**
@@ -14,7 +15,7 @@ class IPv4Type extends AbstractType
     /**
      * {@inheritDoc}
      */
-    protected function getIpClass()
+    protected function getIpClass(): string
     {
         return IP::class;
     }
@@ -22,7 +23,7 @@ class IPv4Type extends AbstractType
     /**
      * {@inheritDoc}
      */
-    protected function createIpObject($ip)
+    protected function createIpObject(string $ip): IpInterface
     {
         return IP::factory($ip);
     }

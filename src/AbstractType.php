@@ -20,21 +20,19 @@ use Doctrine\DBAL\Types\Type;
 abstract class AbstractType extends Type
 {
     const NAME = 'ip';
+    /** @var int */
     const IP_LENGTH = 16;
 
     /**
      * @psalm-return class-string
-     * @return string
      */
-    abstract protected function getIpClass();
+    abstract protected function getIpClass(): string;
 
     /**
-     * @param string $ip
      * @throws \Darsyn\IP\Exception\InvalidIpAddressException
      * @throws \Darsyn\IP\Exception\WrongVersionException
-     * @return \Darsyn\IP\IpInterface
      */
-    abstract protected function createIpObject($ip);
+    abstract protected function createIpObject(string $ip): IpInterface;
 
     /**
      * {@inheritdoc}
@@ -50,7 +48,7 @@ abstract class AbstractType extends Type
      * @throws \Doctrine\DBAL\Types\ConversionException
      * @return \Darsyn\IP\IpInterface|null
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform): mixed
+    public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         /** @var string|resource|\Darsyn\IP\IpInterface|null $value */
         // PostgreSQL will return the binary data as a resource instead of a string (like MySQL).
@@ -66,14 +64,16 @@ abstract class AbstractType extends Type
         if (empty($value)) {
             return null;
         }
-        if (\is_object($value) && \is_a($value, $this->getIpClass(), false)) {
-            /** @var \Darsyn\IP\IpInterface $value */
+        if (\is_object($value)) {
+            if (!\is_a($value, $this->getIpClass(), false)) {
+                throw ValueNotConvertible::new($value, $this->getIpClass());
+            }
             return $value;
         }
         try {
             return $this->createIpObject($value);
         } catch (IpException $e) {
-            throw ValueNotConvertible::new($value, static::NAME, null, $e);
+            throw ValueNotConvertible::new($value, $this->getIpClass(), null, $e);
         }
     }
 
@@ -82,7 +82,7 @@ abstract class AbstractType extends Type
      * @throws \Doctrine\DBAL\Types\ConversionException
      * @return string|null
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
+    public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (empty($value)) {
             return null;
@@ -126,28 +126,10 @@ abstract class AbstractType extends Type
 
     /**
      * {@inheritdoc}
-     * @return string
-     */
-    public function getName()
-    {
-        return self::NAME;
-    }
-
-    /**
-     * {@inheritdoc}
      * @return ParameterType
      */
     public function getBindingType(): ParameterType
     {
         return ParameterType::LARGE_OBJECT;
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return bool
-     */
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
-    {
-        return true;
     }
 }

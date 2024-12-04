@@ -2,7 +2,6 @@ parameters:
     level: 'max'
     paths: [ 'src', 'tests' ]
     checkFunctionNameCase: true
-    checkGenericClassInNonGenericObjectType: true
     reportUnmatchedIgnoredErrors: true
     treatPhpDocTypesAsCertain: false
     parallel:

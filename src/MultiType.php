@@ -2,6 +2,7 @@
 
 namespace Darsyn\IP\Doctrine;
 
+use Darsyn\IP\IpInterface;
 use Darsyn\IP\Version\Multi as IP;
 
 /**
@@ -12,7 +13,7 @@ class MultiType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    protected function getIpClass()
+    protected function getIpClass(): string
     {
         return IP::class;
     }
@@ -20,7 +21,7 @@ class MultiType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    protected function createIpObject($ip)
+    protected function createIpObject(string $ip): IpInterface
     {
         return IP::factory($ip);
     }

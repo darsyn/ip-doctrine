@@ -6,14 +6,17 @@ Please refer to the [`darsyn/ip`][ip] project for complete documentation.
 
 ## Compatibility
 
-This library has extensive test coverage using PHPUnit on PHP versions: `8.1`, `8.2`, and `8.3`.
+This library has extensive test coverage using PHPUnit on PHP versions: `8.1`,
+`8.2`, `8.3` and `8.4`.
 
-Static analysis is performed with PHPStan at `max` level on PHP `8.3`, using
+Static analysis is performed with PHPStan at `max` level on PHP `8.4`, using
 core, bleeding edge, and deprecation rules.
 
-The Doctrine features are compatible with Doctrine DBAL `^4`. Types
-are provided for `Ipv4`, `IPv6`, and `Multi` IP types from the parent
+Types are provided for `Ipv4`, `IPv6`, and `Multi` IP types from the parent
 [`darsyn/ip`][ip] project.
+- Versions `5.*.*` are for Doctrine DBAL `^2.3 || ^3.0` compatibility (PHP `5.6`
+  and greater).
+- Versions `6.*.*` are for Doctrine DBAL `^4` (PHP `8.1` and greater).
 
 ## Code of Conduct
 
