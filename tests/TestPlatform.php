@@ -2,11 +2,12 @@
 
 namespace Darsyn\IP\Tests\Doctrine;
 
-use Doctrine\DBAL\Platforms\SqlitePlatform;
 
-class TestPlatform extends SqlitePlatform
+use Doctrine\DBAL\Platforms\SQLitePlatform;
+
+class TestPlatform extends SQLitePlatform
 {
-    public function getBinaryTypeDeclarationSQL(array $column)
+    public function getBinaryTypeDeclarationSQL(array $column): string
     {
         return 'DUMMYBINARY()';
     }
