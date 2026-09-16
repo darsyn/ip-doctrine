@@ -25,6 +25,6 @@ class IPv4Type extends AbstractType
      */
     protected function createIpObject(string $ip): IpInterface
     {
-        return IP::factory($ip);
+        return IP::tryFromProtocol($ip) ?? IP::fromBinary($ip);
     }
 }

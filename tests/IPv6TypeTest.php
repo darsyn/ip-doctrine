@@ -39,7 +39,7 @@ class IPv6TypeTest extends TestCase
     #[PHPUnit\Test]
     public function testIpConvertsToDatabaseValue(): void
     {
-        $ip = IP::factory('::1');
+        $ip = IP::fromProtocol('::1');
 
         $expected = $ip->getBinary();
         $actual = $this->type->convertToDatabaseValue($ip, $this->platform);
@@ -63,17 +63,17 @@ class IPv6TypeTest extends TestCase
     #[PHPUnit\Test]
     public function testIpConvertsToPHPValue(): void
     {
-        $ip = IP::factory('::1');
+        $ip = IP::fromProtocol('::1');
         /** @var IP $dbIp */
         $dbIp = $this->type->convertToPHPValue($ip->getBinary(), $this->platform);
         $this->assertInstanceOf(IP::class, $dbIp);
-        $this->assertEquals('::1', $dbIp->getCompactedAddress());
+        $this->assertEquals('::1', $dbIp->toCompactedAddress());
     }
 
     #[PHPUnit\Test]
     public function testIpObjectConvertsToPHPValue(): void
     {
-        $ip = IP::factory('::1');
+        $ip = IP::fromProtocol('::1');
         /** @var IP $dbIp */
         $dbIp = $this->type->convertToPHPValue($ip, $this->platform);
         $this->assertInstanceOf(IP::class, $dbIp);
@@ -83,7 +83,7 @@ class IPv6TypeTest extends TestCase
     #[PHPUnit\Test]
     public function testStreamConvertsToPHPValue(): void
     {
-        $ip = IP::factory('::1');
+        $ip = IP::fromProtocol('::1');
         $stream = fopen('php://memory','r+');
         // assertIsResource() isn't available for PHP 5.6 and 7.0 (PHPUnit < 7.0).
         $this->assertTrue(is_resource($stream));
@@ -92,7 +92,7 @@ class IPv6TypeTest extends TestCase
         /** @var IP $dbIp */
         $dbIp = $this->type->convertToPHPValue($stream, $this->platform);
         $this->assertInstanceOf(IP::class, $dbIp);
-        $this->assertEquals('::1', $dbIp->getCompactedAddress());
+        $this->assertEquals('::1', $dbIp->toCompactedAddress());
     }
 
     #[PHPUnit\Test]

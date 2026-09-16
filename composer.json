@@ -20,7 +20,7 @@
     "require": {
         "php": ">=8.1",
         "ext-pdo": "*",
-        "darsyn/ip": "^5.0|^6.0",
+        "darsyn/ip": "^6.1",
         "doctrine/dbal": "^4"
     },
     "autoload-dev": {
