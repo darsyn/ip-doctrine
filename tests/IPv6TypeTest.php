@@ -6,7 +6,7 @@ use Darsyn\IP\Doctrine\IPv6Type;
 use Darsyn\IP\Version\IPv6 as IP;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\TypeRegistry;
 use PHPUnit\Framework\Attributes as PHPUnit;
 use PHPUnit\Framework\TestCase;
 
@@ -14,14 +14,6 @@ class IPv6TypeTest extends TestCase
 {
     private AbstractPlatform $platform;
     private IPv6Type $type;
-
-    #[PHPUnit\BeforeClass]
-    public static function setUpBeforeClassWithoutReturnDeclaration(): void
-    {
-        if (class_exists(Type::class)) {
-            Type::addType('ipv6', IPv6Type::class);
-        }
-    }
 
     #[PHPUnit\Before]
     protected function setUpWithoutReturnDeclaration(): void
@@ -31,7 +23,7 @@ class IPv6TypeTest extends TestCase
         }
 
         $this->platform = new TestPlatform;
-        $type = Type::getType('ipv6');
+        $type = (new TypeRegistry(['ipv6' => new IPv6Type]))->get('ipv6');
         $this->assertInstanceOf(IPv6Type::class, $type);
         $this->type = $type;
     }
