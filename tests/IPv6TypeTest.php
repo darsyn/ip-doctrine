@@ -63,6 +63,16 @@ class IPv6TypeTest extends TestCase
     }
 
     #[PHPUnit\Test]
+    public function testBinaryResemblingProtocolNotationConvertsToPHPValue(): void
+    {
+        $binary = '1:2:3:4:5:6:7:89';
+        /** @var IP $dbIp */
+        $dbIp = $this->type->convertToPHPValue($binary, $this->platform);
+        $this->assertInstanceOf(IP::class, $dbIp);
+        $this->assertSame($binary, $dbIp->getBinary());
+    }
+
+    #[PHPUnit\Test]
     public function testIpObjectConvertsToPHPValue(): void
     {
         $ip = IP::fromProtocol('::1');
