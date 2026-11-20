@@ -3,26 +3,25 @@ name: "Static Analysis"
 on:
   pull_request:
     branches:
-      - 'develop'
+      - 'main'
   push:
     branches:
-      - 'develop'
       - 'main'
 
 jobs:
 
   phpstan:
-    runs-on: 'ubuntu-22.04'
+    runs-on: 'ubuntu-24.04'
     strategy:
       matrix:
         php:
-            - '8.4'
+            - '8.6'
     steps:
-      - uses: 'actions/checkout@v2'
+      - uses: 'actions/checkout@v6'
       - uses: 'shivammathur/setup-php@v2'
         with:
           php-version: '${{ matrix.php }}'
-      - uses: 'ramsey/composer-install@v2'
+      - uses: 'ramsey/composer-install@v4'
         with:
           dependency-versions: 'highest'
       # Require PHPStan via command-line instead of adding to Composer's

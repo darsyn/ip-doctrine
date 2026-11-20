@@ -3,16 +3,15 @@ name: "Linting and Unit Tests"
 on:
   pull_request:
     branches:
-      - 'develop'
+      - 'main'
   push:
     branches:
-      - 'develop'
       - 'main'
 
 jobs:
 
   syntax-linting:
-    runs-on: 'ubuntu-20.04'
+    runs-on: 'ubuntu-24.04'
     strategy:
       matrix:
         php:
@@ -20,15 +19,17 @@ jobs:
           - '8.2'
           - '8.3'
           - '8.4'
+          - '8.5'
+          - '8.6'
     steps:
-      - uses: 'actions/checkout@v2'
+      - uses: 'actions/checkout@v6'
       - uses: 'shivammathur/setup-php@v2'
         with:
           php-version: '${{ matrix.php }}'
       - run: 'find src/ -type f -name "*.php" -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )'
 
   unit-testing:
-    runs-on: 'ubuntu-20.04'
+    runs-on: 'ubuntu-24.04'
     strategy:
       matrix:
         php:
@@ -36,12 +37,14 @@ jobs:
           - '8.2'
           - '8.3'
           - '8.4'
+          - '8.5'
+          - '8.6'
     steps:
-      - uses: 'actions/checkout@v2'
+      - uses: 'actions/checkout@v6'
       - uses: 'shivammathur/setup-php@v2'
         with:
           php-version: '${{ matrix.php }}'
-      - uses: 'ramsey/composer-install@v2'
+      - uses: 'ramsey/composer-install@v4'
         with:
           dependency-versions: 'highest'
       - run: './vendor/bin/phpunit --bootstrap="vendor/autoload.php" --test-suffix="Test.php" tests'
