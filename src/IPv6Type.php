@@ -25,4 +25,12 @@ class IPv6Type extends AbstractType
     {
         return IP::tryFromProtocol($ip) ?? IP::fromBinary($ip);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function createIpObjectFromBinary(string $binary): IpInterface
+    {
+        return IP::fromBinary($binary);
+    }
 }
