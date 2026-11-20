@@ -35,6 +35,15 @@ abstract class AbstractType extends Type
     abstract protected function createIpObject(string $ip): IpInterface;
 
     /**
+     * @throws \Darsyn\IP\Exception\InvalidIpAddressException
+     * @throws \Darsyn\IP\Exception\WrongVersionException
+     */
+    protected function createIpObjectFromBinary(string $binary): IpInterface
+    {
+        return $this->createIpObject($binary);
+    }
+
+    /**
      * {@inheritdoc}
      * @return string
      */
@@ -71,7 +80,7 @@ abstract class AbstractType extends Type
             return $value;
         }
         try {
-            return $this->createIpObject($value);
+            return $this->createIpObjectFromBinary($value);
         } catch (IpException $e) {
             throw ValueNotConvertible::new($value, $this->getIpClass(), null, $e);
         }
