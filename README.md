@@ -7,17 +7,20 @@ Please refer to the [`darsyn/ip`][ip] project for complete documentation.
 ## Compatibility
 
 This library has extensive test coverage using PHPUnit on PHP versions: `8.1`,
-`8.2`, `8.3` and `8.4`.
+`8.2`, `8.3`, `8.4`, `8.5` and `8.6`.
 
-Static analysis is performed with PHPStan at `max` level on PHP `8.4`, using
+Static analysis is performed with PHPStan at `max` level on PHP `8.6`, using
 core, bleeding edge, and deprecation rules.
 
 Types are provided for `Ipv4`, `IPv6`, and `Multi` IP types from the parent
 [`darsyn/ip`][ip] project.
 
-- Versions `5.*.*` are for Doctrine DBAL `^2.3 || ^3.0` compatibility (PHP `5.6`
-  and greater).
-- Versions `6.*.*` are for Doctrine DBAL `^4` (PHP `8.1` and greater).
+| `darsyn/ip-doctrine` | `darsyn/ip`      | Doctrine DBAL    | PHP            |
+|----------------------|------------------|------------------|----------------|
+| `5.*.*`              | `^5.0`           | `^2.3 \|\| ^3.0` | `5.6` or later |
+| `6.0.0`              | `^5.0`           | `^4`             | `8.1` or later |
+| `6.0.1`              | `^5.0 \|\| ^6.0` | `^4`             | `8.1` or later |
+| `6.1.*`              | `^6.1`           | `^4`             | `8.1` or later |
 
 ## Querying
 
@@ -38,8 +41,9 @@ $queryBuilder
     ->setParameter('address', $ipObject, $columnType);
 ```
 
-`'ip'` is the name the type was registered under (either `Type::addType()` or
-Symfony config).
+`'ip'` is the name the type was registered under. Register the type in the
+`TypeRegistry` of the connection configuration (DBAL `4.6` or later), with
+`Type::addType()`, or in the Symfony configuration.
 
 The type accepts an IP object or a protocol string, and binds the value as
 binary on every database platform. See the [`darsyn/ip`][ip] documentation for
