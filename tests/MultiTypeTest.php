@@ -6,7 +6,7 @@ use Darsyn\IP\Doctrine\MultiType;
 use Darsyn\IP\Version\Multi as IP;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\TypeRegistry;
 use PHPUnit\Framework\Attributes as PHPUnit;
 use PHPUnit\Framework\TestCase;
 
@@ -14,14 +14,6 @@ class MultiTypeTest extends TestCase
 {
     private AbstractPlatform $platform;
     private MultiType $type;
-
-    #[PHPUnit\BeforeClass]
-    public static function setUpBeforeClassWithoutReturnDeclaration(): void
-    {
-        if (class_exists(Type::class)) {
-            Type::addType('ip_multi', MultiType::class);
-        }
-    }
 
     #[PHPUnit\Before]
     protected function setUpWithoutReturnDeclaration(): void
@@ -31,7 +23,7 @@ class MultiTypeTest extends TestCase
         }
 
         $this->platform = new TestPlatform;
-        $type = Type::getType('ip_multi');
+        $type = (new TypeRegistry(['ip_multi' => new MultiType]))->get('ip_multi');
         $this->assertInstanceOf(MultiType::class, $type);
         $this->type = $type;
     }

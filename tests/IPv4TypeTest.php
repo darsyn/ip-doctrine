@@ -7,6 +7,7 @@ use Darsyn\IP\Version\IPv4 as IP;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\TypeRegistry;
 use PHPUnit\Framework\Attributes as PHPUnit;
 use PHPUnit\Framework\TestCase;
 
@@ -14,14 +15,6 @@ class IPv4TypeTest extends TestCase
 {
     private AbstractPlatform $platform;
     private IPv4Type $type;
-
-    #[PHPUnit\BeforeClass]
-    public static function setUpBeforeClassWithoutReturnDeclaration(): void
-    {
-        if (class_exists(Type::class)) {
-            Type::addType('ipv4', IPv4Type::class);
-        }
-    }
 
     #[PHPUnit\Before]
     protected function setUpWithoutReturnDeclaration(): void
@@ -31,7 +24,7 @@ class IPv4TypeTest extends TestCase
         }
 
         $this->platform = new TestPlatform;
-        $type = Type::getType('ipv4');
+        $type = (new TypeRegistry(['ipv4' => new IPv4Type]))->get('ipv4');
         $this->assertInstanceOf(IPv4Type::class, $type);
         $this->type = $type;
     }
